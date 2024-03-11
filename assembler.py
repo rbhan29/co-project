@@ -178,4 +178,41 @@ def decimal_to_binary_twos_complement(decimal_num, num_bits):
     binary = bin(decimal_num)[2:].zfill(num_bits)
     return binary
 
+def typeR(ins,rd,rs1,rs2):
+    if(typo_reg(rd) is True and typo_reg(rs1) is True and typo_reg(rs2) is True):
+        if(typo_inst(ins)):
+            print(instruction[ins][2]+reg_file[rs2]+reg_file[rs1]+instruction[ins][1]+reg_file[rd]+instruction[ins][0])
+        else:
+            exit()
+    else:
+        exit()
+        
+def typeS(ins,rd,imm,rs1):
+    bin = dec_to_bin_12(imm)
+    x = bin[0:5][::-1]
+    y = bin[6:12][::-1]
+    if(typo_reg(rd) is True and typo_reg(rs1) is True ):
+        if(typo_inst(ins)):
+            print(y,reg_file[rd],reg_file[rs1],instruction[ins][1],x,instruction[ins][0])
+        else:
+            exit()
+    else:
+        exit()
+        
+def typeU(ins,rd,imm):
+    bin = decimal_to_binary_twos_complement(imm, 32)
+    bin = bin[::-1]
+    bin = bin[12:32]
+    
+    if(typo_reg(rd) is True):
+        if(typo_inst(ins)):
+            print(bin,reg_file[rd],instruction[ins][0])
+        else:
+            exit()
+    else:
+        exit()
+
+print(all_inst)
+print(labels)
+
 
