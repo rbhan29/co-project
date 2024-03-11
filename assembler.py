@@ -95,6 +95,26 @@ def outofbounds(inst, imm):
             return False
         return True
        
+def typo_inst(inst):
+    if inst not in Alltype:
+        print("Error in Instruction name ", inst)
+        return False
+    return True
+
+def typo_reg(reg):
+    if reg not in regdict.keys():
+        print("Error in register name ", reg)
+        return False
+    return True
+
+# retrun error if not even a single halt Instruction is present
+def missing_halt(all_inst):
+    halt = ["beq", "zero", "zero", "0"]
+    for i in all_inst:
+        if all_inst[i] == halt:
+            return True
+    print("Error: missing halt Instruction")
+    return False
 
 
 
