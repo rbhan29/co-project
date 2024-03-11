@@ -115,6 +115,50 @@ def missing_halt(all_inst):
             return True
     print("Error: missing halt Instruction")
     return False
+    def parseForInstructions(file):
+    instructions = {}
+
+    with open(file, "r") as f:
+
+        lines = f.readlines()
+        lines = [x.strip() for x in lines]
+        lines = [x for x in lines if x]
+        lines = [x.replace(",", " ") for x in lines]
+
+        line_count = 0
+        for i in lines:
+            if i.split()[0].endswith(":"):
+                instructions[line_count] = i.split()[1:]
+            else:
+                instructions[line_count] = i.split()
+            line_count += 1
+
+    return instructions
+
+
+def get_labels(file):
+    labels = {}
+
+    with open(file, "r") as f:
+        lines = f.readlines()
+        lines = [x.strip() for x in lines]
+        lines = [x for x in lines if x]
+        lines = [x.replace(",", " ") for x in lines]
+        line_count = 0
+        for i in lines:
+            if i.split()[0].endswith(":"):
+                labels[i.split()[0][0:-1]] = line_count
+            line_count += 1
+
+    return labels
+
+    
+def dec_to_twocomp(decimal, bits):
+    if decimal < 0:
+        decimal = (1<<bits) + decimal
+    format_string = '{:0%ib}' % bits
+    return format_string.format(decimal)
+    
 
 
 
