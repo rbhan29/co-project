@@ -107,7 +107,7 @@ def typo_reg(reg):
         return False
     return True
 
-# retrun error if not even a single halt Instruction is present
+
 def missing_halt(all_inst):
     halt = ["beq", "zero", "zero", "0"]
     for i in all_inst:
@@ -160,6 +160,22 @@ def dec_to_twocomp(decimal, bits):
     return format_string.format(decimal)
     
 
+def dec_to_bin_12(decimal):
+    binary = bin(int(decimal))[2:] 
+    binary = binary.zfill(12)
+    return binary
 
+def dec_to_bin_20(decimal):
+    binary = bin(int(decimal))[2:] 
+    binary = binary.zfill(20)
+    return binary
+
+def decimal_to_binary_twos_complement(decimal_num, num_bits):
+    # Handle negative numbers
+    if decimal_num < 0:
+        decimal_num += 2 ** num_bits
+
+    binary = bin(decimal_num)[2:].zfill(num_bits)
+    return binary
 
 
