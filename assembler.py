@@ -212,7 +212,6 @@ def typeU(ins,rd,imm):
     else:
         exit()
 
-print(all_inst)
-print(labels)
+
 
 
