@@ -206,53 +206,6 @@ def typeU(ins,rd,imm):
     else:
         exit()
                
-def typeJ(ins, rd, lbl,pc):
-    print(isinstance(lbl, int))
-    if lbl in labels:
-        lbl_pc = labels[lbl]
-        # getting the current line number of the instruction
-        current_pc = pc
-        # calculating the offset
-        offset = (current_pc-lbl_pc) * 4        
-        imm = decimal_to_binary_twos_complement(offset,32)[-2:-22:-1][-1::-1]
-        print(imm)
-
-        w = imm[0]
-        x = imm[-1:-11:-1][-1::-1]
-        y = imm[-11]
-        z = imm[1:9]
-
-        if typo_reg(rd) is True:
-            if typo_inst(ins):
-                print(
-                    str(w)
-                    + str(x)
-                    + str(y)
-                    + str(z)
-                    + regdict[rd]
-                    + instruction[ins]
-                )
-    elif isinstance(lbl, int):
-        imm = decimal_to_binary_twos_complement(lbl,32)[-2:-22:-1][-1::-1]
-        w = imm[0]
-        x = imm[-1:-11:-1][-1::-1]
-        y = imm[-11]
-        z = imm[1:9]
-        print(imm)
-        if typo_reg(rd) is True:
-            if typo_inst(ins):
-                print(
-                    str(w)
-                    + str(x)
-                    + str(y)
-                    + str(z)
-                    + regdict[rd]
-                    + instruction[ins]
-                )
-    else:
-        print("Error: label not found")
-        exit()
-      
 def outofbounds(inst,imm):
     if(inst in Utype or inst in Jtype):
         if(len(imm)>12):
@@ -303,12 +256,8 @@ for file_name in files:
                 typeI(instruct[i][0],instruct[i][1],k[1][0:-1],k[0])
         elif(instruct[i][0] in Stype):
             typeS(instruct[i][0],instruct[i][1],instruct[i][2],instruct[i][3])
-        elif(instruct[i][0] in Btype):
-            typeB(instruct[i][0],instruct[i][1],instruct[i][2],instruct[i][3],i)
         elif(instruct[i][0] in Utype):
             typeU(instruct[i][0],instruct[i][1],instruct[i][2])
-        elif(instruct[i][0] in Jtype):
-            typeJ(instruct[i][0],instruct[i][1],instruct[i][2],i)
 
 
 
