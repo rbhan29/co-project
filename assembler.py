@@ -205,62 +205,7 @@ def typeU(ins,rd,imm):
             exit()
     else:
         exit()
-        
-def typeB(ins, rs1, rs2, lbl,pc):
-
-    if ins=="beq" and rs1=="zero" and rs2=="zero" and lbl=="0":
-        print("00000000000000000000000001100011")
-        return
-    
-    if isinstance(lbl, int):
-        imm = decimal_to_binary_twos_complement(lbl,32)[-2:-22:-1][-1::-1]
-        w = imm[0]
-        x = imm[-1:-11:-1][-1::-1]
-        y = imm[-11]
-        z = imm[1:9]
-        print(imm)
-        if typo_reg(rs1) is True and typo_reg(rs2) is True:
-            if typo_inst(ins):
-                print(
-                str(w)
-                + str(x)
-                + regdict[rs2]
-                + regdict[rs1]
-                + instruction[ins][1]
-                + str(y)
-                + str(z)
-                + instruction[ins][0]
-                )
-             
-    elif(lbl in labels):
-        # getting the line number of the label
-        lbl_pc = labels[lbl]
-        # getting the current line number of the instruction
-        current_pc = pc
-        # calculating the offset
-        offset = (current_pc-lbl_pc) * 4
-        
-        imm = decimal_to_binary_twos_complement(offset,20)[7:19]
-        w = imm[0]
-        x = imm[2:8]
-        y = imm[8::]
-        z = imm[1]
-
-        if typo_reg(rs1) is True and typo_reg(rs2) is True:
-            if typo_inst(ins):
-                print(
-                    str(w)
-                    + str(x)
-                    + regdict[rs2]
-                    + regdict[rs1]
-                    + instruction[ins][1]
-                    + str(y)
-                    + str(z)
-                    + instruction[ins][0]
-                )
-            else:
-                exit()
-       
+               
 def typeJ(ins, rd, lbl,pc):
     print(isinstance(lbl, int))
     if lbl in labels:
