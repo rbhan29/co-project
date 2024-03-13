@@ -137,12 +137,6 @@ def missing_halt(all_inst):
     print("Error: missing halt instruction")
     return False
 
-def dec_to_twocomp(decimal, bits):
-    if decimal < 0:
-        decimal = (1<<bits) + decimal
-    format_string = '{:0%ib}' % bits
-    return format_string.format(decimal)
-
 def dec_to_bin_12(decimal):
     binary = bin(int(decimal))[2:] 
     binary = binary.zfill(12)
