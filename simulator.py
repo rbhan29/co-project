@@ -346,3 +346,130 @@ def jal(instr, pc):
     regwrite(instr["rd"], (pc + 1) * 4)
     return pc + imm
 
+def main(input_file, output_file):
+    PC = 0
+    instr_dict = {}
+
+    with open(input_file, "r") as f:
+        lines = f.readlines()
+        for i in range(len(lines)):
+            instr_dict[i] = lines[i].strip()
+
+    virtual_halt = "00000000000000000000000001100011"
+    halt = False
+
+    all_reg_vals = []
+    final_data_mem = []
+
+    while PC < len(instr_dict) and not halt:
+        current_reg_vals = ""
+
+        print(f"PC: {PC}")
+
+        pc_update = False
+
+        if instr_dict[PC] == virtual_halt:
+            halt = True
+
+        else:
+
+            instr = instructions(instr_dict[PC])
+
+            if instr["type"] == "R":
+                if instr["funct7"] == "0100000":
+                    sub(instr)
+                else:
+                    if instr["funct3"] == "000":
+                        add(instr)
+                    elif instr["funct3"] == "001":
+                        sll(instr)
+                    elif instr["funct3"] == "010":
+                        slt(instr)
+                    elif instr["funct3"] == "011":
+                        sltu(instr)
+                    elif instr["funct3"] == "100":
+                        xor(instr)
+                    elif instr["funct3"] == "101":
+                        srl(instr)
+                    elif instr["funct3"] == "110":
+                        or_(instr)
+                    elif instr["funct3"] == "111":
+                        and_(instr)
+
+            elif instr["type"] == "I":
+                if instr["opcode"] == "0000011":
+                    lw(instr)
+                elif instr["opcode"] == "1100111":
+                    PC = jalr(instr, PC)
+                    pc_update = True
+                elif instr["opcode"] == "0010011":
+                    if instr["funct3"] == "000":
+                        addi(instr)
+                    elif instr["funct3"] == "011":
+                        sltiu(instr)
+
+            elif instr["type"] == "S":
+                sw(instr)
+
+            elif instr["type"] == "B":
+                if instr["funct3"] == "000":
+                    PC = beq(instr, PC)
+                elif instr["funct3"] == "001":
+                    PC = bne(instr, PC)
+                elif instr["funct3"] == "100":
+                    PC = blt(instr, PC)
+                elif instr["funct3"] == "101":
+                    PC = bge(instr, PC)
+                elif instr["funct3"] == "110":
+                    PC = bltu(instr, PC)
+                elif instr["funct3"] == "111":
+                    PC = bgeu(instr, PC)
+                pc_update = True
+
+            elif instr["type"] == "U":
+                if instr["opcode"] == "0010111":
+                    auipc(instr, PC)
+
+                elif instr["opcode"] == "0110111":
+                    lui(instr)
+
+            elif instr["type"] == "J":
+                PC = jal(instr, PC)
+                pc_update = True
+
+        if pc_update:
+            print(f"Next PC: {PC}")
+        else:
+            PC += 1
+
+        current_reg_vals += f"0b{dec_to_twocomp(PC*4, 32)} "
+        for reg in register_val:
+            current_reg_vals += f"0b{dec_to_twocomp(register_val[reg], 32)} "
+
+        if not halt:
+            all_reg_vals.append(current_reg_vals)
+
+        if halt:
+            all_reg_vals.append(all_reg_vals[-1])
+
+        print(f"register_val: {current_reg_vals}")
+        print(f"Memory: {data_memory}")
+
+
+        print("-" * 50)
+    
+    for mem in data_memory:
+        final_data_mem.append(f"0x{hex(mem)[2:].zfill(8)}:0b{dec_to_twocomp(data_memory[mem], 32)}")
+
+    with open(output_file, "w") as f:
+        for reg in all_reg_vals:
+            f.write(f"{reg}\n")
+        for mem in final_data_mem:
+            f.write(f"{mem}\n")
+
+
+if _name_ == "_main_":
+    if len(sys.argv) < 3:
+        print("Usage: python <input_file> <output_file>")
+    else:
+        main(sys.argv[1], sys.argv[2])
