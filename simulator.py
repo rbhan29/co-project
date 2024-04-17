@@ -177,5 +177,104 @@ def instructions(instruction):
             "imm": instruction[0] + instruction[12:20] + instruction[11] + instruction[1:11] + '0',
             "opcode": opcode
         }
+        # R-type
+def add(instr):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    rd = rs1 + rs2
+    regwrite(instr["rd"], rd)
+
+
+def sub(instr):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    rd = rs1 - rs2
+    regwrite(instr["rd"], rd)
+
+
+def slt(instr):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    rd = 1 if rs1 < rs2 else 0
+    regwrite(instr["rd"], rd)
+
+
+def sltu(instr):
+    rs1 = unsigned(register_val[instr["rs1"]])
+    rs2 = unsigned(register_val[instr["rs2"]])
+    rd = 1 if rs1 < rs2 else 0
+    regwrite(instr["rd"], rd)
+
+
+def xor(instr):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    rd = rs1 ^ rs2
+    regwrite(instr["rd"], rd)
+
+
+def and_(instr):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    rd = rs1 & rs2
+    regwrite(instr["rd"], rd)
+
+
+def or_(instr):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    rd = rs1 | rs2
+    regwrite(instr["rd"], rd)
+
+
+def sll(instr):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    rd = rs1 << (rs2 & 0b11111)
+    regwrite(instr["rd"], rd)
+
+
+def srl(instr):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    rd = rs1 >> (rs2 & 0b11111)
+    regwrite(instr["rd"], rd)
+
+# S-type
+def sw(instr):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    imm = int(instr["imm"], 2)
+    addr = rs1 + imm
+    data_memory[addr] = rs2
+
+# I-type
+def lw(instr):
+    rs1 = register_val[instr["rs1"]]
+    imm = int(instr["imm"], 2)
+    addr = rs1 + imm
+    regwrite(instr["rd"], data_memory[addr])
+
+
+def addi(instr):
+    rs1 = register_val[instr["rs1"]]
+    imm = twocomp_to_dec(instr["imm"])
+    rd = rs1 + imm
+    regwrite(instr["rd"], rd)
+
+
+def sltiu(instr):
+    rs1 = unsigned(register_val[instr["rs1"]])
+    imm = int(instr["imm"], 2)
+    rd = 1 if rs1 < imm else 0
+    regwrite(instr["rd"], rd)
+
+
+def jalr(instr, pc):
+    rs1 = register_val[instr["rs1"]] // 4
+    imm = twocomp_to_dec(instr["imm"]) // 4
+    regwrite(instr["rd"], pc + 1)
+    return rs1 + imm
+    
 
 
