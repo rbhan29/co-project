@@ -344,7 +344,7 @@ def lui(instr):
 def jal(instr, pc):
     imm = twocomp_to_dec(instr["imm"]) // 4
     regwrite(instr["rd"], (pc + 1) * 4)
-    return pc + imm
+    return pc + imm
 
 def main(input_file, output_file):
     PC = 0
@@ -468,7 +468,7 @@ def main(input_file, output_file):
             f.write(f"{mem}\n")
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Usage: python <input_file> <output_file>")
     else:
