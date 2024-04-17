@@ -275,6 +275,74 @@ def jalr(instr, pc):
     imm = twocomp_to_dec(instr["imm"]) // 4
     regwrite(instr["rd"], pc + 1)
     return rs1 + imm
-    
 
+# B-type
+def beq(instr, pc):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    if rs1 == rs2:
+        return pc + twocomp_to_dec(instr["imm"]) // 4
+    else:
+        return pc + 1
+
+
+def bne(instr, pc):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    if rs1 != rs2:
+        return pc + twocomp_to_dec(instr["imm"]) // 4
+    else:
+        return pc + 1
+
+
+def blt(instr, pc):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    if rs1 < rs2:
+        return pc + twocomp_to_dec(instr["imm"]) // 4
+    else:
+        return pc + 1
+
+
+def bge(instr, pc):
+    rs1 = register_val[instr["rs1"]]
+    rs2 = register_val[instr["rs2"]]
+    if rs1 >= rs2:
+        return pc + twocomp_to_dec(instr["imm"]) // 4
+    else:
+        return pc + 1
+
+
+def bltu(instr, pc):
+    rs1 = unsigned(register_val[instr["rs1"]])
+    rs2 = unsigned(register_val[instr["rs2"]])
+    if rs1 < rs2:
+        return pc + twocomp_to_dec(instr["imm"]) // 4
+    else:
+        return pc + 1
+
+
+def bgeu(instr, pc):
+    rs1 = unsigned(register_val[instr["rs1"]])
+    rs2 = unsigned(register_val[instr["rs2"]])
+    if rs1 >= rs2:
+        return pc + twocomp_to_dec(instr["imm"]) // 4
+    else:
+        return pc + 1
+
+# U-type
+def auipc(instr, pc):
+    imm = twocomp_to_dec(instr["imm"]) << 12
+    regwrite(instr["rd"], pc * 4 + imm)
+
+
+def lui(instr):
+    imm = twocomp_to_dec(instr["imm"]) << 12
+    regwrite(instr["rd"], imm)
+
+# J-type
+def jal(instr, pc):
+    imm = twocomp_to_dec(instr["imm"]) // 4
+    regwrite(instr["rd"], (pc + 1) * 4)
+    return pc + imm
 
